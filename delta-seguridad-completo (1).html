@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delta Seguridad — Emergency Valladolid</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black:#080808;--dark:#0f0f0f;--card:#141414;--card2:#1a1a1a;
+  --border:rgba(255,255,255,0.07);--gold:#C9A84C;--gold2:#E8C87A;
+  --white:#f0ede8;--muted:#888;--success:#27ae60;--danger:#c0392b;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:'Barlow',sans-serif;font-weight:300;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.4;}
+
+/* ===== NAV ===== */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 3rem;height:66px;border-bottom:1px solid var(--border);background:rgba(8,8,8,0.95);backdrop-filter:blur(14px);}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:0.15em;color:var(--gold);cursor:pointer;display:flex;align-items:center;gap:8px;}
+.nav-logo span{color:var(--white);}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{font-family:'Barlow Condensed',sans-serif;font-size:0.82rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;cursor:pointer;}
+.nav-links a:hover,.nav-links a.active{color:var(--gold);}
+.nav-cta{font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;letter-spacing:0.15em;text-transform:uppercase;background:var(--gold);color:var(--black);padding:8px 18px;border:none;cursor:pointer;font-weight:700;transition:background .2s;}
+.nav-cta:hover{background:var(--gold2);}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;border:none;background:none;padding:4px;}
+.nav-hamburger span{display:block;width:22px;height:1.5px;background:var(--white);transition:all .3s;}
+.mobile-menu{display:none;position:fixed;top:66px;left:0;right:0;background:rgba(8,8,8,0.98);border-bottom:1px solid var(--border);z-index:499;flex-direction:column;padding:1rem 2rem;}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{font-family:'Barlow Condensed',sans-serif;font-size:1rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:0.75rem 0;border-bottom:1px solid var(--border);cursor:pointer;text-decoration:none;}
+.mobile-menu a:last-child{border-bottom:none;color:var(--gold);}
+
+/* ===== PAGES ===== */
+.page{display:none;min-height:100vh;padding-top:66px;}
+.page.active{display:block;}
+
+/* ===== SHARED ===== */
+.section-tag{font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;display:flex;align-items:center;gap:10px;}
+.section-tag::before{content:'';display:block;width:24px;height:1px;background:var(--gold);}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.2rem,5vw,3.8rem);letter-spacing:0.05em;color:var(--white);line-height:1;margin-bottom:0.75rem;}
+.section-sub{color:var(--muted);max-width:520px;line-height:1.8;font-size:.95rem;}
+section{padding:6rem 3rem;}
+.btn-primary{font-family:'Barlow Condensed',sans-serif;font-size:.84rem;letter-spacing:.18em;text-transform:uppercase;font-weight:700;background:var(--gold);color:var(--black);padding:13px 30px;border:none;cursor:pointer;text-decoration:none;transition:background .2s,transform .1s;display:inline-block;}
+.btn-primary:hover{background:var(--gold2);transform:translateY(-1px);}
+.btn-ghost{font-family:'Barlow Condensed',sans-serif;font-size:.84rem;letter-spacing:.18em;text-transform:uppercase;font-weight:600;background:transparent;color:var(--white);padding:13px 30px;border:1px solid var(--border);cursor:pointer;text-decoration:none;transition:border-color .2s,color .2s;display:inline-block;}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold);}
+.f-group{margin-bottom:1.1rem;}
+.f-label{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:block;}
+.f-input{width:100%;background:var(--card);border:1px solid var(--border);color:var(--white);padding:11px 14px;font-family:'Barlow',sans-serif;font-size:.88rem;outline:none;transition:border-color .2s;}
+.f-input:focus{border-color:var(--gold);}
+.f-input::placeholder{color:#444;}
+textarea.f-input{resize:vertical;min-height:90px;}
+select.f-input{cursor:pointer;appearance:none;}
+
+/* ========================================
+   PAGE 1 — INICIO
+======================================== */
+.hero{min-height:calc(100vh - 66px);display:flex;align-items:center;position:relative;padding:0 3rem;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 70% 50%,rgba(201,168,76,.05) 0%,transparent 70%),radial-gradient(ellipse 40% 80% at 90% 20%,rgba(192,57,43,.04) 0%,transparent 60%),linear-gradient(160deg,#0f0f0f 0%,#080808 100%);}
+.hero-vline{position:absolute;top:0;bottom:0;left:55%;width:1px;background:linear-gradient(to bottom,transparent,var(--gold),transparent);opacity:.15;}
+.hero-content{position:relative;z-index:2;max-width:660px;}
+.hero-tag{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;display:flex;align-items:center;gap:12px;animation:fadeUp .6s ease both;}
+.hero-tag::before{content:'';display:block;width:32px;height:1px;background:var(--gold);}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.8rem,9vw,7.5rem);line-height:.92;letter-spacing:.03em;color:var(--white);margin-bottom:1.5rem;animation:fadeUp .7s ease .1s both;}
+.hero h1 em{font-style:normal;color:var(--gold);display:block;}
+.hero-desc{font-size:1rem;line-height:1.8;color:var(--muted);max-width:460px;margin-bottom:2.5rem;animation:fadeUp .7s ease .2s both;}
+.hero-actions{display:flex;gap:14px;align-items:center;flex-wrap:wrap;animation:fadeUp .7s ease .3s both;}
+.hero-stats{position:absolute;right:3rem;bottom:3rem;display:flex;gap:3rem;animation:fadeUp .7s ease .4s both;}
+.hero-stat-num{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:var(--gold);line-height:1;}
+.hero-stat-label{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-top:4px;}
+
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-top:3.5rem;background:var(--border);}
+.svc-card{background:var(--card);padding:2.5rem;transition:background .3s;position:relative;overflow:hidden;}
+.svc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold);transform:scaleX(0);transition:transform .3s;transform-origin:left;}
+.svc-card:hover{background:var(--card2);}
+.svc-card:hover::before{transform:scaleX(1);}
+.svc-icon{font-size:2rem;margin-bottom:1.5rem;display:block;}
+.svc-name{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--white);margin-bottom:.6rem;}
+.svc-desc{font-size:.88rem;color:var(--muted);line-height:1.7;}
+
+.rangos-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:3.5rem;}
+.rango-card{background:var(--card);border:1px solid var(--border);padding:1.75rem 1.25rem;text-align:center;position:relative;overflow:hidden;transition:border-color .3s,transform .2s;}
+.rango-card:hover{border-color:var(--gold);transform:translateY(-4px);}
+.rango-card.top{border-color:rgba(201,168,76,.35);}
+.rango-num{font-family:'Bebas Neue',sans-serif;font-size:3rem;color:var(--border);position:absolute;top:.5rem;right:.75rem;line-height:1;pointer-events:none;}
+.rango-icon{font-size:1.8rem;margin-bottom:.75rem;display:block;}
+.rango-name{font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--white);margin-bottom:.4rem;}
+.rango-desc{font-size:.78rem;color:var(--muted);line-height:1.55;}
+.rango-badge{display:inline-block;margin-top:.85rem;font-family:'Barlow Condensed',sans-serif;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;padding:3px 10px;border:1px solid;}
+.bg-gold{border-color:var(--gold);color:var(--gold);}
+.bg-red{border-color:#c0392b;color:#e74c3c;}
+.bg-blue{border-color:#2980b9;color:#3498db;}
+.bg-green{border-color:#27ae60;color:#2ecc71;}
+.bg-gray{border-color:#555;color:var(--muted);}
+
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:3.5rem;}
+.step{padding:0 1.5rem;text-align:center;}
+.step-num{font-family:'Bebas Neue',sans-serif;font-size:4rem;color:var(--gold);opacity:.22;line-height:1;margin-bottom:.75rem;}
+.step-title{font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--white);margin-bottom:.5rem;}
+.step-desc{font-size:.83rem;color:var(--muted);line-height:1.7;}
+.cta-box{margin-top:3.5rem;text-align:center;padding:3rem;border:1px solid var(--border);background:var(--card);position:relative;overflow:hidden;}
+.cta-box::before{content:'DELTA';font-family:'Bebas Neue',sans-serif;font-size:12rem;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--white);opacity:.02;pointer-events:none;white-space:nowrap;}
+.cta-box h3{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.08em;margin-bottom:.6rem;}
+.cta-box p{color:var(--muted);margin-bottom:2rem;font-size:.92rem;}
+
+.contacto-grid{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;margin-top:3.5rem;align-items:start;}
+.contact-item{display:flex;gap:1rem;align-items:flex-start;padding:1.25rem;background:var(--card);border:1px solid var(--border);transition:border-color .2s;margin-bottom:12px;}
+.contact-item:hover{border-color:var(--gold);}
+.contact-icon{font-size:1.4rem;flex-shrink:0;}
+.contact-label{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:3px;}
+.contact-val{font-size:.92rem;color:var(--white);}
+
+/* ========================================
+   PAGE 2 — FORMULARIO
+======================================== */
+.form-container{max-width:740px;margin:0 auto;padding:3rem 2rem 5rem;}
+.form-header{text-align:center;margin-bottom:2.5rem;}
+.form-tag{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;}
+.form-main-title{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;letter-spacing:.06em;margin-bottom:.6rem;}
+.form-sub-text{color:var(--muted);font-size:.88rem;line-height:1.7;}
+.progress-wrap{margin-bottom:2.5rem;}
+.progress-bar{background:var(--card);border:1px solid var(--border);height:4px;overflow:hidden;border-radius:2px;}
+.progress-fill{height:100%;background:linear-gradient(to right,var(--gold),var(--gold2));transition:width .4s ease;}
+.progress-lbl{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);text-align:right;margin-top:6px;}
+.section-block{margin-bottom:2rem;}
+.section-heading{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);padding:.55rem 1rem;background:rgba(201,168,76,.06);border-left:2px solid var(--gold);margin-bottom:1.1rem;}
+.q-num{font-family:'Bebas Neue',sans-serif;font-size:.82rem;color:var(--gold);opacity:.6;margin-bottom:3px;}
+.q-label{font-size:.92rem;color:var(--white);margin-bottom:7px;line-height:1.5;display:block;}
+.req{color:var(--gold);margin-left:3px;}
+.radio-group{display:flex;gap:8px;flex-wrap:wrap;}
+.radio-opt{display:none;}
+.radio-label{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;padding:7px 16px;border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all .2s;user-select:none;}
+.radio-opt:checked + .radio-label{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.08);}
+.form-divider{border:none;border-top:1px solid var(--border);margin:1.75rem 0;}
+.submit-section{text-align:center;padding:2rem;background:var(--card);border:1px solid var(--border);margin-top:1.5rem;}
+.submit-warn{font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.6;}
+.success-screen{display:none;text-align:center;padding:4rem 2rem;border:1px solid rgba(39,174,96,.3);background:rgba(39,174,96,.04);margin-top:1rem;}
+.success-icon{font-size:4rem;margin-bottom:1.25rem;}
+.success-title{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;letter-spacing:.06em;margin-bottom:.6rem;}
+.success-sub{color:var(--muted);line-height:1.7;max-width:400px;margin:0 auto 1.5rem;}
+
+/* ========================================
+   PAGE 3 — PANEL
+======================================== */
+.panel-layout{display:flex;min-height:calc(100vh - 66px);}
+.sidebar{width:210px;flex-shrink:0;background:var(--dark);border-right:1px solid var(--border);display:flex;flex-direction:column;}
+.sidebar-logo{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:.15em;color:var(--gold);}
+.sidebar-logo span{color:var(--white);}
+.sidebar-lbl{font-family:'Barlow Condensed',sans-serif;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:#444;padding:1.1rem 1.5rem .4rem;}
+.sidebar-item{display:flex;align-items:center;gap:9px;padding:.6rem 1.5rem;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);transition:color .2s,background .2s;border:none;background:none;width:100%;text-align:left;border-left:2px solid transparent;}
+.sidebar-item:hover,.sidebar-item.active{color:var(--white);background:rgba(255,255,255,.04);}
+.sidebar-item.active{color:var(--gold);border-left-color:var(--gold);}
+.panel-main{flex:1;padding:2rem 2.5rem;overflow-x:auto;}
+.panel-page{display:none;}
+.panel-page.active{display:block;}
+.panel-header{margin-bottom:1.75rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-end;}
+.panel-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.06em;}
+.panel-sub{font-size:.82rem;color:var(--muted);margin-top:3px;}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.75rem;}
+.stat-card{background:var(--card);border:1px solid var(--border);padding:1.1rem 1.4rem;}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;color:var(--gold);line-height:1;}
+.stat-label{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-top:3px;}
+.table-controls{display:flex;gap:10px;margin-bottom:.85rem;align-items:center;flex-wrap:wrap;}
+.search-inp{background:var(--card);border:1px solid var(--border);color:var(--white);padding:8px 13px;font-family:'Barlow',sans-serif;font-size:.83rem;outline:none;transition:border-color .2s;flex:1;max-width:280px;}
+.search-inp:focus{border-color:var(--gold);}
+.search-inp::placeholder{color:#444;}
+.filter-btn{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;background:transparent;border:1px solid var(--border);color:var(--muted);padding:7px 13px;cursor:pointer;transition:all .2s;}
+.filter-btn:hover,.filter-btn.active{border-color:var(--gold);color:var(--gold);}
+.agents-table{width:100%;border-collapse:collapse;}
+.agents-table th{font-family:'Barlow Condensed',sans-serif;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:#444;padding:.7rem .9rem;text-align:left;border-bottom:1px solid var(--border);}
+.agents-table td{padding:.8rem .9rem;border-bottom:1px solid var(--border);font-size:.85rem;vertical-align:middle;}
+.agents-table tr:hover td{background:rgba(255,255,255,.02);}
+.agent-avatar{width:32px;height:32px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:.9rem;flex-shrink:0;}
+.agent-name-cell{display:flex;align-items:center;gap:9px;}
+.agent-id{font-size:.7rem;color:#444;}
+.rank-badge{font-family:'Barlow Condensed',sans-serif;font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border:1px solid;display:inline-block;}
+.rank-director{border-color:#C9A84C;color:#C9A84C;}
+.rank-subdirector,.rank-jefe{border-color:#c0392b;color:#e74c3c;}
+.rank-senior{border-color:#2980b9;color:#3498db;}
+.rank-agente{border-color:#27ae60;color:#2ecc71;}
+.rank-cadete{border-color:#8e44ad;color:#9b59b6;}
+.status-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px;}
+.s-active{background:#2ecc71;}.s-inactive{background:#e74c3c;}.s-training{background:#f39c12;}
+.action-btn{font-family:'Barlow Condensed',sans-serif;font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;background:transparent;border:1px solid var(--border);color:var(--muted);padding:4px 9px;cursor:pointer;transition:all .2s;margin-right:3px;}
+.action-btn:hover{border-color:var(--gold);color:var(--gold);}
+.add-form{background:var(--card);border:1px solid var(--border);padding:1.75rem;max-width:580px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.add-btn{font-family:'Barlow Condensed',sans-serif;font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;font-weight:700;background:var(--gold);color:var(--black);padding:11px 24px;border:none;cursor:pointer;transition:background .2s;margin-top:.4rem;}
+.add-btn:hover{background:var(--gold2);}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:600;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--dark);border:1px solid var(--border);padding:2rem;max-width:460px;width:90%;}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:.06em;margin-bottom:1.25rem;}
+.modal-field{margin-bottom:.85rem;}
+.modal-lbl{font-family:'Barlow Condensed',sans-serif;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:3px;display:block;}
+.modal-val{font-size:.9rem;color:var(--white);padding:7px 0;border-bottom:1px solid var(--border);}
+.modal-close{font-family:'Barlow Condensed',sans-serif;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;background:transparent;border:1px solid var(--border);color:var(--muted);padding:7px 18px;cursor:pointer;margin-top:1.25rem;transition:all .2s;}
+.modal-close:hover{border-color:var(--gold);color:var(--gold);}
+
+/* ========================================
+   PAGE 4 — CLIENTES
+======================================== */
+.hero-slim{padding:4.5rem 3rem 3rem;background:linear-gradient(160deg,#0f0f0f 0%,#080808 100%);border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.hero-slim::before{content:'CLIENTE VIP';font-family:'Bebas Neue',sans-serif;font-size:10rem;position:absolute;top:50%;right:-1rem;transform:translateY(-50%);color:var(--white);opacity:.02;pointer-events:none;white-space:nowrap;}
+.services-pick{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:2.5rem;}
+.svc-pick{background:var(--card);border:1px solid var(--border);padding:1.4rem;cursor:pointer;transition:all .2s;position:relative;user-select:none;}
+.svc-pick:hover{border-color:rgba(201,168,76,.4);}
+.svc-pick.selected{border-color:var(--gold);background:rgba(201,168,76,.06);}
+.svc-pick.selected::after{content:'✓';position:absolute;top:.7rem;right:.7rem;font-family:'Bebas Neue',sans-serif;font-size:1rem;color:var(--gold);}
+.svc-pick-icon{font-size:1.7rem;margin-bottom:.65rem;display:block;}
+.svc-pick-name{font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--white);margin-bottom:.3rem;}
+.svc-pick-desc{font-size:.78rem;color:var(--muted);line-height:1.5;}
+.client-layout{display:grid;grid-template-columns:1fr 340px;gap:2.5rem;align-items:start;}
+.client-form-card{background:var(--card);border:1px solid var(--border);padding:1.75rem;}
+.client-form-title{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.06em;margin-bottom:1.25rem;padding-bottom:.85rem;border-bottom:1px solid var(--border);}
+.urgency-row{display:flex;gap:8px;}
+.urg-opt{display:none;}
+.urg-label{font-family:'Barlow Condensed',sans-serif;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;padding:7px 14px;border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all .2s;flex:1;text-align:center;}
+.urg-opt:checked + .urg-label{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.06);}
+.summary-card{background:var(--card);border:1px solid var(--border);padding:1.4rem;position:sticky;top:86px;}
+.summary-title{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.06em;margin-bottom:1.1rem;padding-bottom:.7rem;border-bottom:1px solid var(--border);}
+.summary-line{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.75rem;}
+.sum-label{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+.sum-val{font-size:.85rem;color:var(--white);text-align:right;max-width:170px;}
+.sum-val.gold{color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:.95rem;}
+.guarantee{background:rgba(39,174,96,.06);border:1px solid rgba(39,174,96,.2);padding:.85rem;margin:1.1rem 0;font-size:.78rem;color:#7dcea0;line-height:1.6;}
+.clientes-container{max-width:1060px;margin:0 auto;padding:3rem 2rem 5rem;}
+.client-success{display:none;text-align:center;padding:5rem 2rem;}
+.client-success-icon{font-size:5rem;margin-bottom:1.5rem;}
+.client-success-title{font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:.06em;margin-bottom:.5rem;}
+.client-success-code{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--gold);margin-bottom:1rem;letter-spacing:.15em;}
+.client-success-sub{color:var(--muted);line-height:1.8;max-width:420px;margin:0 auto 2rem;}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  nav{padding:0 1.5rem;}
+  .nav-links{display:none;}
+  .nav-hamburger{display:flex;}
+  .nav-cta{display:none;}
+  section{padding:4rem 1.5rem;}
+  .hero{padding:0 1.5rem;}
+  .hero-stats{display:none;}
+  .services-grid{grid-template-columns:1fr;}
+  .rangos-grid{grid-template-columns:repeat(2,1fr);}
+  .steps{grid-template-columns:repeat(2,1fr);gap:2rem;}
+  .contacto-grid{grid-template-columns:1fr;}
+  .sidebar{display:none;}
+  .panel-main{padding:1.5rem;}
+  .stats-row{grid-template-columns:repeat(2,1fr);}
+  .form-row{grid-template-columns:1fr;}
+  .services-pick{grid-template-columns:1fr 1fr;}
+  .client-layout{grid-template-columns:1fr;}
+  .summary-card{position:static;}
+  .hero-slim{padding:3rem 1.5rem 2.5rem;}
+  .clientes-container{padding:2rem 1.5rem 4rem;}
+  .form-container{padding:2rem 1.5rem 4rem;}
+}
+@media(max-width:560px){
+  .services-pick{grid-template-columns:1fr;}
+  .rangos-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" onclick="goTo('inicio')">▲ <span>DELTA</span> SEGURIDAD</div>
+  <ul class="nav-links">
+    <li><a onclick="goTo('inicio')" id="nl-inicio">Inicio</a></li>
+    <li><a onclick="goTo('formulario')" id="nl-formulario">Unirse</a></li>
+    <li><a onclick="goTo('panel')" id="nl-panel">Panel</a></li>
+    <li><a onclick="goTo('clientes')" id="nl-clientes">Clientes</a></li>
+  </ul>
+  <button class="nav-cta" onclick="goTo('formulario')">Solicitar ingreso</button>
+  <div class="nav-hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a onclick="goTo('inicio');toggleMenu()">Inicio</a>
+  <a onclick="goTo('formulario');toggleMenu()">Unirse al equipo</a>
+  <a onclick="goTo('panel');toggleMenu()">Panel de mandos</a>
+  <a onclick="goTo('clientes');toggleMenu()">Contratar servicio</a>
+</div>
+
+<!-- ==============================
+     PAGE: INICIO
+============================== -->
+<div class="page active" id="page-inicio">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-vline"></div>
+    <div class="hero-content">
+      <div class="hero-tag">Emergency Valladolid · Roblox</div>
+      <h1>PROTECCIÓN <em>DE ÉLITE</em></h1>
+      <p class="hero-desc">Delta Seguridad es la agencia de guardaespaldas más profesional de Emergency Valladolid. Escoltamos, protegemos y aseguramos a nuestros clientes con los más altos estándares operativos.</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="goTo('clientes')">Contratar servicio</button>
+        <button class="btn-ghost" onclick="goTo('formulario')">Unirse al equipo</button>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div><div class="hero-stat-num">100%</div><div class="hero-stat-label">Compromiso</div></div>
+      <div><div class="hero-stat-num">24/7</div><div class="hero-stat-label">Disponibles</div></div>
+      <div><div class="hero-stat-num">Δ</div><div class="hero-stat-label">Delta Force</div></div>
+    </div>
+  </div>
+
+  <!-- SERVICIOS -->
+  <section style="background:var(--dark)">
+    <div class="section-tag">Lo que hacemos</div>
+    <div class="section-title">SERVICIOS</div>
+    <p class="section-sub">Soluciones de seguridad completas dentro de Emergency Valladolid, adaptadas a cada tipo de cliente.</p>
+    <div class="services-grid">
+      <div class="svc-card"><span class="svc-icon">🛡️</span><div class="svc-name">Escolta personal</div><p class="svc-desc">Acompañamiento constante al cliente por cualquier zona del mapa. Uno o varios agentes asignados exclusivamente a tu protección.</p></div>
+      <div class="svc-card"><span class="svc-icon">🏢</span><div class="svc-name">Seguridad de evento</div><p class="svc-desc">Protección perimetral en reuniones, eventos de roleplay, transacciones o cualquier acto que requiera control de zona.</p></div>
+      <div class="svc-card"><span class="svc-icon">🚗</span><div class="svc-name">Escolta en convoy</div><p class="svc-desc">Acompañamiento en vehículo por rutas peligrosas. Flota coordinada con agentes delante, detrás y al lado del cliente.</p></div>
+      <div class="svc-card"><span class="svc-icon">🔍</span><div class="svc-name">Reconocimiento</div><p class="svc-desc">Antes de cualquier operación, el equipo analiza la zona, identifica amenazas y traza rutas de evacuación seguras.</p></div>
+      <div class="svc-card"><span class="svc-icon">📡</span><div class="svc-name">Vigilancia y alerta</div><p class="svc-desc">Monitoreo de personas sospechosas en el entorno del cliente. Comunicación en tiempo real con el equipo en campo.</p></div>
+      <div class="svc-card"><span class="svc-icon">🆘</span><div class="svc-name">Extracción urgente</div><p class="svc-desc">Protocolo de evacuación inmediata ante amenaza activa. El cliente es extraído de la zona de peligro en el menor tiempo posible.</p></div>
+    </div>
+  </section>
+
+  <!-- RANGOS -->
+  <section>
+    <div class="section-tag">Estructura interna</div>
+    <div class="section-title">RANGOS</div>
+    <p class="section-sub">Delta Seguridad opera con una jerarquía clara. Cada agente conoce su rol y responsabilidades dentro del equipo.</p>
+    <div class="rangos-grid">
+      <div class="rango-card top"><div class="rango-num">01</div><span class="rango-icon">👑</span><div class="rango-name">Director General</div><p class="rango-desc">Control total. Toma de decisiones estratégicas y representación oficial.</p><span class="rango-badge bg-gold">Fundador</span></div>
+      <div class="rango-card"><div class="rango-num">02</div><span class="rango-icon">🔴</span><div class="rango-name">Subdirector</div><p class="rango-desc">Gestión de RRHH y operaciones. Mano derecha en todas las decisiones.</p><span class="rango-badge bg-red">Alto mando</span></div>
+      <div class="rango-card"><div class="rango-num">03</div><span class="rango-icon">🟠</span><div class="rango-name">Jefe de Ops</div><p class="rango-desc">Coordinación de equipos en campo. Aprueba misiones y lidera operaciones.</p><span class="rango-badge bg-red">Alto mando</span></div>
+      <div class="rango-card"><div class="rango-num">04</div><span class="rango-icon">🔵</span><div class="rango-name">Agente Senior</div><p class="rango-desc">Veterano con experiencia demostrada. Puede liderar equipos y entrenar cadetes.</p><span class="rango-badge bg-blue">Veterano</span></div>
+      <div class="rango-card"><div class="rango-num">05</div><span class="rango-icon">🟢</span><div class="rango-name">Agente</div><p class="rango-desc">Miembro activo que ha superado la formación. Opera en misiones independientemente.</p><span class="rango-badge bg-green">Activo</span></div>
+      <div class="rango-card"><div class="rango-num">06</div><span class="rango-icon">🟣</span><div class="rango-name">Cadete</div><p class="rango-desc">Nuevo ingreso en periodo de formación. Aprende protocolos y demuestra su valía.</p><span class="rango-badge bg-gray">En formación</span></div>
+      <div class="rango-card"><div class="rango-num">07</div><span class="rango-icon">⭐</span><div class="rango-name">Cliente VIP</div><p class="rango-desc">Personas que contratan servicios de protección. Atención preferente.</p><span class="rango-badge bg-gold">Cliente</span></div>
+      <div class="rango-card"><div class="rango-num">08</div><span class="rango-icon">👤</span><div class="rango-name">Visitante</div><p class="rango-desc">Sin verificar. Acceso solo a canales públicos hasta completar el ingreso.</p><span class="rango-badge bg-gray">Sin verificar</span></div>
+    </div>
+  </section>
+
+  <!-- UNIRSE -->
+  <section style="background:var(--dark)">
+    <div class="section-tag">Forma parte del equipo</div>
+    <div class="section-title">CÓMO UNIRSE</div>
+    <p class="section-sub">El proceso de selección es exigente. Solo los candidatos con el criterio y la actitud correcta forman parte de Delta Seguridad.</p>
+    <div class="steps">
+      <div class="step"><div class="step-num">01</div><div class="step-title">Solicitud</div><p class="step-desc">Rellena el formulario de ingreso con tus datos y responde a las preguntas de selección.</p></div>
+      <div class="step"><div class="step-num">02</div><div class="step-title">Revisión</div><p class="step-desc">Los mandos analizan tu solicitud. Valoramos experiencia, actitud y disponibilidad.</p></div>
+      <div class="step"><div class="step-num">03</div><div class="step-title">Prueba</div><p class="step-desc">Si eres aceptado, entras como Cadete y realizas un periodo de formación en campo.</p></div>
+      <div class="step"><div class="step-num">04</div><div class="step-title">Ascenso</div><p class="step-desc">Superada la formación, ascienden a Agente y operan en misiones reales del grupo.</p></div>
+    </div>
+    <div class="cta-box">
+      <h3>¿LISTO PARA SOLICITAR TU INGRESO?</h3>
+      <p>Rellena el formulario oficial y un mando revisará tu candidatura en menos de 48 horas.</p>
+      <button class="btn-primary" onclick="goTo('formulario')">Iniciar solicitud →</button>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section>
+    <div class="section-tag">Habla con nosotros</div>
+    <div class="section-title">CONTACTO</div>
+    <div class="contacto-grid">
+      <div>
+        <p style="color:var(--muted);line-height:1.8;margin-bottom:1.25rem;font-size:.92rem">Si quieres contratar nuestros servicios o tienes cualquier consulta, contacta con nosotros por Discord o usa el formulario de clientes.</p>
+        <div class="contact-item"><span class="contact-icon">💬</span><div><div class="contact-label">Discord</div><div class="contact-val">Servidor Delta Seguridad</div></div></div>
+        <div class="contact-item"><span class="contact-icon">🎮</span><div><div class="contact-label">Roblox</div><div class="contact-val">Emergency Valladolid</div></div></div>
+        <div class="contact-item"><span class="contact-icon">⏱️</span><div><div class="contact-label">Tiempo de respuesta</div><div class="contact-val">Menos de 24 horas</div></div></div>
+        <button class="btn-primary" style="margin-top:1rem;width:100%" onclick="goTo('clientes')">Contratar servicio oficial →</button>
+      </div>
+      <div>
+        <div class="f-group"><label class="f-label">Tu usuario de Roblox</label><input class="f-input" type="text" placeholder="ej: zaro0663"></div>
+        <div class="f-group"><label class="f-label">Usuario de Discord</label><input class="f-input" type="text" placeholder="ej: usuario#0000"></div>
+        <div class="f-group"><label class="f-label">Tipo de consulta</label>
+          <select class="f-input" style="background:var(--card)">
+            <option>Contratar escolta</option><option>Seguridad para evento</option><option>Información sobre rangos</option><option>Alianza</option><option>Otro</option>
+          </select>
+        </div>
+        <div class="f-group"><label class="f-label">Mensaje</label><textarea class="f-input" placeholder="Cuéntanos qué necesitas..."></textarea></div>
+        <button class="btn-primary" style="width:100%" onclick="alert('✅ Mensaje enviado. Un mando te contactará pronto.')">Enviar mensaje →</button>
+      </div>
+    </div>
+  </section>
+
+  <footer style="border-top:1px solid var(--border);padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.15em;color:var(--gold)">▲ DELTA SEGURIDAD</div>
+    <div style="font-size:.78rem;color:#444">© 2025 Delta Seguridad · Emergency Valladolid · Roblox</div>
+  </footer>
+</div>
+
+<!-- ==============================
+     PAGE: FORMULARIO
+============================== -->
+<div class="page" id="page-formulario">
+  <div class="form-container">
+    <div class="form-header">
+      <div class="form-tag">Proceso de selección</div>
+      <div class="form-main-title">SOLICITUD DE INGRESO</div>
+      <p class="form-sub-text">Responde con honestidad. Los mandos revisarán tu solicitud en 48h. Los campos <span style="color:var(--gold)">✦</span> son obligatorios.</p>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="pFill" style="width:0%"></div></div>
+      <div class="progress-lbl" id="pLbl">0 / 25 respondidas</div>
+    </div>
+
+    <form id="ingForm" onsubmit="submitIngreso(event)">
+      <div class="section-block">
+        <div class="section-heading">🧍 Datos personales</div>
+        <div class="f-group"><div class="q-num">01</div><label class="q-label">¿Cuál es tu nombre de usuario en Roblox? <span class="req">✦</span></label><input class="f-input" name="q1" type="text" placeholder="ej: zaro0663" required></div>
+        <div class="f-group"><div class="q-num">02</div><label class="q-label">¿Cuántos años tienes? <span class="req">✦</span></label><input class="f-input" name="q2" type="number" min="8" max="60" placeholder="Tu edad" required></div>
+        <div class="f-group"><div class="q-num">03</div><label class="q-label">¿De qué país o zona horaria eres?</label><input class="f-input" name="q3" type="text" placeholder="ej: España — UTC+1"></div>
+        <div class="f-group"><div class="q-num">04</div><label class="q-label">¿Cuántas horas a la semana puedes dedicarle al servidor? <span class="req">✦</span></label>
+          <div class="radio-group"><input type="radio" class="radio-opt" name="q4" id="q4a" value="1-3h"><label class="radio-label" for="q4a">1–3h</label><input type="radio" class="radio-opt" name="q4" id="q4b" value="4-7h"><label class="radio-label" for="q4b">4–7h</label><input type="radio" class="radio-opt" name="q4" id="q4c" value="8-14h"><label class="radio-label" for="q4c">8–14h</label><input type="radio" class="radio-opt" name="q4" id="q4d" value="+15h"><label class="radio-label" for="q4d">+15h</label></div>
+        </div>
+        <div class="f-group"><div class="q-num">05</div><label class="q-label">¿Tienes Discord activo y con notificaciones? <span class="req">✦</span></label>
+          <div class="radio-group"><input type="radio" class="radio-opt" name="q5" id="q5a" value="Si"><label class="radio-label" for="q5a">Sí</label><input type="radio" class="radio-opt" name="q5" id="q5b" value="No"><label class="radio-label" for="q5b">No</label><input type="radio" class="radio-opt" name="q5" id="q5c" value="A veces"><label class="radio-label" for="q5c">A veces</label></div>
+        </div>
+      </div>
+      <hr class="form-divider">
+      <div class="section-block">
+        <div class="section-heading">🎮 Experiencia en Roblox y el juego</div>
+        <div class="f-group"><div class="q-num">06</div><label class="q-label">¿Cuánto tiempo llevas jugando a Emergency Valladolid? <span class="req">✦</span></label>
+          <div class="radio-group"><input type="radio" class="radio-opt" name="q6" id="q6a" value="menos1m"><label class="radio-label" for="q6a">Menos de 1 mes</label><input type="radio" class="radio-opt" name="q6" id="q6b" value="1-3m"><label class="radio-label" for="q6b">1–3 meses</label><input type="radio" class="radio-opt" name="q6" id="q6c" value="3-6m"><label class="radio-label" for="q6c">3–6 meses</label><input type="radio" class="radio-opt" name="q6" id="q6d" value="+6m"><label class="radio-label" for="q6d">+6 meses</label></div>
+        </div>
+        <div class="f-group"><div class="q-num">07</div><label class="q-label">¿Qué nivel o rango tienes actualmente en el juego?</label><input class="f-input" name="q7" type="text" placeholder="Indica tu nivel o rango en EV"></div>
+        <div class="f-group"><div class="q-num">08</div><label class="q-label">¿Has formado parte de algún otro grupo en EV? ¿Cuál?</label><textarea class="f-input" name="q8" placeholder="Si no, escribe 'Ninguno'"></textarea></div>
+        <div class="f-group"><div class="q-num">09</div><label class="q-label">¿Has tenido alguna sanción o ban en el juego? Explica brevemente.</label><textarea class="f-input" name="q9" placeholder="Si no, escribe 'Nunca'"></textarea></div>
+        <div class="f-group"><div class="q-num">10</div><label class="q-label">¿Sabes moverte con fluidez por el mapa de Valladolid? <span class="req">✦</span></label>
+          <div class="radio-group"><input type="radio" class="radio-opt" name="q10" id="q10a" value="bien"><label class="radio-label" for="q10a">Sí, lo conozco bien</label><input type="radio" class="radio-opt" name="q10" id="q10b" value="masomenos"><label class="radio-label" for="q10b">Más o menos</label><input type="radio" class="radio-opt" name="q10" id="q10c" value="aprendiendo"><label class="radio-label" for="q10c">Aprendiendo</label></div>
+        </div>
+      </div>
+      <hr class="form-divider">
+      <div class="section-block">
+        <div class="section-heading">🛡️ Experiencia en roleplay y seguridad</div>
+        <div class="f-group"><div class="q-num">11</div><label class="q-label">¿Has hecho roleplay de seguridad antes? <span class="req">✦</span></label>
+          <div class="radio-group"><input type="radio" class="radio-opt" name="q11" id="q11a" value="siEV"><label class="radio-label" for="q11a">Sí, en EV</label><input type="radio" class="radio-opt" name="q11" id="q11b" value="siOtro"><label class="radio-label" for="q11b">Sí, en otro juego</label><input type="radio" class="radio-opt" name="q11" id="q11c" value="no"><label class="radio-label" for="q11c">Primera vez</label></div>
+        </div>
+        <div class="f-group"><div class="q-num">12</div><label class="q-label">¿Sabes lo que es un "perímetro de seguridad"? Explícalo. <span class="req">✦</span></label><textarea class="f-input" name="q12" placeholder="Explica con tus propias palabras..."></textarea></div>
+        <div class="f-group"><div class="q-num">13</div><label class="q-label">¿Cómo actuarías si el cliente es atacado de improviso? <span class="req">✦</span></label><textarea class="f-input" name="q13" placeholder="Describe tu protocolo de actuación..."></textarea></div>
+        <div class="f-group"><div class="q-num">14</div><label class="q-label">¿Qué harías si detectas a alguien sospechoso cerca del cliente? <span class="req">✦</span></label><textarea class="f-input" name="q14" placeholder="¿Cómo lo gestionas?"></textarea></div>
+        <div class="f-group"><div class="q-num">15</div><label class="q-label">¿Sabes trabajar en equipo por voz o texto? <span class="req">✦</span></label>
+          <div class="radio-group"><input type="radio" class="radio-opt" name="q15" id="q15a" value="si"><label class="radio-label" for="q15a">Sí, sin problema</label><input type="radio" class="radio-opt" name="q15" id="q15b" value="texto"><label class="radio-label" for="q15b">Solo texto</label><input type="radio" class="radio-opt" name="q15" id="q15c" value="aprendiendo"><label class="radio-label" for="q15c">Aprendiendo</label></div>
+        </div>
+      </div>
+      <hr class="form-divider">
+      <div class="section-block">
+        <div class="section-heading">🧠 Situaciones y criterio</div>
+        <div class="f-group"><div class="q-num">16</div><label class="q-label">El cliente quiere ir a zona peligrosa contra tu consejo. ¿Qué haces? <span class="req">✦</span></label><textarea class="f-input" name="q16" placeholder="Describe tu decisión..."></textarea></div>
+        <div class="f-group"><div class="q-num">17</div><label class="q-label">Un compañero incumple el protocolo en misión. ¿Cómo lo gestionas? <span class="req">✦</span></label><textarea class="f-input" name="q17" placeholder="¿Qué pasos seguirías?"></textarea></div>
+        <div class="f-group"><div class="q-num">18</div><label class="q-label">El cliente pide algo contra las reglas del servidor. ¿Qué respondes? <span class="req">✦</span></label><textarea class="f-input" name="q18" placeholder="¿Cómo lo manejarías?"></textarea></div>
+        <div class="f-group"><div class="q-num">19</div><label class="q-label">Un superior te da una orden con la que no estás de acuerdo. ¿Qué haces? <span class="req">✦</span></label><textarea class="f-input" name="q19" placeholder="Sé honesto..."></textarea></div>
+        <div class="f-group"><div class="q-num">20</div><label class="q-label">El equipo pierde comunicación durante una misión larga. ¿Qué medidas tomas? <span class="req">✦</span></label><textarea class="f-input" name="q20" placeholder="Protocolo de contingencia..."></textarea></div>
+      </div>
+      <hr class="form-divider">
+      <div class="section-block">
+        <div class="section-heading">🤝 Actitud y compromiso</div>
+        <div class="f-group"><div class="q-num">21</div><label class="q-label">¿Por qué quieres unirte a Delta Seguridad? <span class="req">✦</span></label><textarea class="f-input" name="q21" placeholder="Tu motivación real..."></textarea></div>
+        <div class="f-group"><div class="q-num">22</div><label class="q-label">¿Qué te diferencia de otros candidatos?</label><textarea class="f-input" name="q22" placeholder="Tus puntos fuertes..."></textarea></div>
+        <div class="f-group"><div class="q-num">23</div><label class="q-label">¿Aceptas el periodo de formación como Cadete? <span class="req">✦</span></label>
+          <div class="radio-group"><input type="radio" class="radio-opt" name="q23" id="q23a" value="si"><label class="radio-label" for="q23a">Sí, sin problema</label><input type="radio" class="radio-opt" name="q23" id="q23b" value="depende"><label class="radio-label" for="q23b">Depende del tiempo</label><input type="radio" class="radio-opt" name="q23" id="q23c" value="no"><label class="radio-label" for="q23c">No</label></div>
+        </div>
+        <div class="f-group"><div class="q-num">24</div><label class="q-label">¿Aceptas el reglamento y las órdenes de los mandos? <span class="req">✦</span></label>
+          <div class="radio-group"><input type="radio" class="radio-opt" name="q24" id="q24a" value="si"><label class="radio-label" for="q24a">Sí, lo acepto</label><input type="radio" class="radio-opt" name="q24" id="q24b" value="no"><label class="radio-label" for="q24b">No estoy seguro</label></div>
+        </div>
+        <div class="f-group"><div class="q-num">25</div><label class="q-label">¿Algo más que quieras contarnos?</label><textarea class="f-input" name="q25" placeholder="Información adicional..."></textarea></div>
+      </div>
+      <div class="submit-section">
+        <p class="submit-warn">Al enviar confirmas que toda la información es verdadera. Las solicitudes falsas serán descartadas.</p>
+        <button type="submit" class="btn-primary">Enviar solicitud →</button>
+      </div>
+    </form>
+    <div class="success-screen" id="ingSuccess">
+      <div class="success-icon">✅</div>
+      <div class="success-title">SOLICITUD ENVIADA</div>
+      <p class="success-sub">Tu candidatura ha sido registrada. Un mando te contactará por Discord en menos de 48 horas.</p>
+      <button class="btn-primary" onclick="goTo('inicio')" style="margin-top:1.5rem">← Volver al inicio</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==============================
+     PAGE: PANEL
+============================== -->
+<div class="page" id="page-panel">
+  <div class="panel-layout">
+    <div class="sidebar">
+      <div class="sidebar-logo">▲ <span>DELTA</span></div>
+      <div class="sidebar-lbl">Panel interno</div>
+      <button class="sidebar-item active" id="sb-agentes" onclick="showPanel('agentes',this)"><span>👥</span>Agentes</button>
+      <button class="sidebar-item" id="sb-add" onclick="showPanel('add',this)"><span>➕</span>Añadir agente</button>
+      <button class="sidebar-item" id="sb-misiones" onclick="showPanel('misiones',this)"><span>📋</span>Misiones</button>
+      <div style="margin-top:auto;padding:1rem 1.5rem;border-top:1px solid var(--border)">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:#444;cursor:pointer" onclick="goTo('inicio')">← Inicio</span>
+      </div>
+    </div>
+    <div class="panel-main">
+
+      <!-- AGENTES -->
+      <div class="panel-page active" id="pp-agentes">
+        <div class="panel-header"><div><div class="panel-title">FICHAS DE AGENTES</div><div class="panel-sub">Gestión interna — Solo mandos</div></div></div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-val" id="totalCount">7</div><div class="stat-label">Total agentes</div></div>
+          <div class="stat-card"><div class="stat-val" id="activeCount">5</div><div class="stat-label">Activos</div></div>
+          <div class="stat-card"><div class="stat-val" id="cadeteCount">1</div><div class="stat-label">Cadetes</div></div>
+          <div class="stat-card"><div class="stat-val" id="inactiveCount">1</div><div class="stat-label">Inactivos</div></div>
+        </div>
+        <div class="table-controls">
+          <input class="search-inp" type="text" placeholder="Buscar agente..." id="searchInp" oninput="filterAgents()">
+          <button class="filter-btn active" onclick="setFilter('todos',this)">Todos</button>
+          <button class="filter-btn" onclick="setFilter('activo',this)">Activos</button>
+          <button class="filter-btn" onclick="setFilter('cadete',this)">Cadetes</button>
+          <button class="filter-btn" onclick="setFilter('inactivo',this)">Inactivos</button>
+        </div>
+        <table class="agents-table">
+          <thead><tr><th>Agente</th><th>Rango</th><th>Estado</th><th>Ingreso</th><th>Misiones</th><th>Acciones</th></tr></thead>
+          <tbody id="agentsBody"></tbody>
+        </table>
+      </div>
+
+      <!-- ADD AGENTE -->
+      <div class="panel-page" id="pp-add">
+        <div class="panel-header"><div><div class="panel-title">AÑADIR AGENTE</div><div class="panel-sub">Registrar nuevo miembro</div></div></div>
+        <div class="add-form">
+          <div class="form-row">
+            <div class="f-group"><label class="f-label">Usuario de Roblox</label><input class="f-input" id="newUser" type="text" placeholder="ej: zaro0663"></div>
+            <div class="f-group"><label class="f-label">Rango</label>
+              <select class="f-input" id="newRank">
+                <option>Director General</option><option>Subdirector</option><option>Jefe de Ops</option><option>Agente Senior</option><option>Agente</option><option selected>Cadete</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="f-group"><label class="f-label">Estado</label>
+              <select class="f-input" id="newStatus"><option value="activo">Activo</option><option value="cadete">En formación</option><option value="inactivo">Inactivo</option></select>
+            </div>
+            <div class="f-group"><label class="f-label">Notas (opcional)</label><input class="f-input" id="newNotes" type="text" placeholder="Observaciones..."></div>
+          </div>
+          <button class="add-btn" onclick="addAgent()">Registrar agente →</button>
+        </div>
+      </div>
+
+      <!-- MISIONES -->
+      <div class="panel-page" id="pp-misiones">
+        <div class="panel-header"><div><div class="panel-title">MISIONES ACTIVAS</div><div class="panel-sub">Registro de operaciones</div></div></div>
+        <div class="add-form" style="margin-bottom:1.75rem">
+          <div class="form-row">
+            <div class="f-group"><label class="f-label">Nombre de misión</label><input class="f-input" id="mName" placeholder="ej: Escolta VIP — Centro"></div>
+            <div class="f-group"><label class="f-label">Tipo</label>
+              <select class="f-input" id="mType"><option>Escolta personal</option><option>Seguridad de evento</option><option>Convoy</option><option>Reconocimiento</option><option>Extracción</option></select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="f-group"><label class="f-label">Agente líder</label><input class="f-input" id="mLeader" placeholder="Usuario Roblox"></div>
+            <div class="f-group"><label class="f-label">Cliente</label><input class="f-input" id="mClient" placeholder="Usuario del cliente"></div>
+          </div>
+          <button class="add-btn" onclick="addMission()">Registrar misión →</button>
+        </div>
+        <table class="agents-table">
+          <thead><tr><th>Misión</th><th>Tipo</th><th>Líder</th><th>Cliente</th><th>Estado</th><th>Acción</th></tr></thead>
+          <tbody id="missionsBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==============================
+     PAGE: CLIENTES
+============================== -->
+<div class="page" id="page-clientes">
+  <div class="hero-slim">
+    <div class="section-tag">Área de clientes</div>
+    <div class="section-title">CONTRATAR SERVICIO</div>
+    <p class="section-sub" style="margin-top:.5rem">Selecciona el tipo de protección y un mando confirmará la asignación del equipo en menos de 2 horas.</p>
+  </div>
+  <div class="clientes-container" id="clientMain">
+    <p style="font-family:'Barlow Condensed',sans-serif;font-size:.72rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:1.1rem">Selecciona el servicio</p>
+    <div class="services-pick">
+      <div class="svc-pick" onclick="selectSvc(this,'Escolta personal')"><span class="svc-pick-icon">🛡️</span><div class="svc-pick-name">Escolta personal</div><p class="svc-pick-desc">1 o más agentes asignados exclusivamente a tu protección.</p></div>
+      <div class="svc-pick" onclick="selectSvc(this,'Seguridad de evento')"><span class="svc-pick-icon">🏢</span><div class="svc-pick-name">Seguridad de evento</div><p class="svc-pick-desc">Control perimetral en reuniones, transacciones o eventos RP.</p></div>
+      <div class="svc-pick" onclick="selectSvc(this,'Escolta en convoy')"><span class="svc-pick-icon">🚗</span><div class="svc-pick-name">Escolta en convoy</div><p class="svc-pick-desc">Acompañamiento en vehículo con flota coordinada.</p></div>
+      <div class="svc-pick" onclick="selectSvc(this,'Reconocimiento')"><span class="svc-pick-icon">🔍</span><div class="svc-pick-name">Reconocimiento</div><p class="svc-pick-desc">Análisis de zona y amenazas antes de la operación.</p></div>
+      <div class="svc-pick" onclick="selectSvc(this,'Vigilancia')"><span class="svc-pick-icon">📡</span><div class="svc-pick-name">Vigilancia</div><p class="svc-pick-desc">Monitoreo del entorno con reporte en tiempo real.</p></div>
+      <div class="svc-pick" onclick="selectSvc(this,'Extracción urgente')"><span class="svc-pick-icon">🆘</span><div class="svc-pick-name">Extracción urgente</div><p class="svc-pick-desc">Evacuación inmediata ante amenaza activa confirmada.</p></div>
+    </div>
+    <div class="client-layout">
+      <div class="client-form-card">
+        <div class="client-form-title">DATOS DE LA SOLICITUD</div>
+        <div class="f-group"><label class="f-label">Tu usuario de Roblox <span style="color:var(--gold)">✦</span></label><input class="f-input" id="cUser" type="text" placeholder="ej: ClienteVIP123" oninput="updateSum()"></div>
+        <div class="f-group"><label class="f-label">Usuario de Discord <span style="color:var(--gold)">✦</span></label><input class="f-input" id="cDiscord" type="text" placeholder="ej: usuario#0000"></div>
+        <div class="f-group"><label class="f-label">Número de agentes</label>
+          <select class="f-input" id="cAgents" onchange="updateSum()"><option value="1">1 agente</option><option value="2" selected>2 agentes</option><option value="3">3 agentes</option><option value="Equipo completo (4+)">Equipo completo (4+)</option></select>
+        </div>
+        <div class="f-group"><label class="f-label">Zona o lugar del mapa</label><input class="f-input" id="cLocation" type="text" placeholder="ej: Centro de Valladolid..." oninput="updateSum()"></div>
+        <div class="f-group"><label class="f-label">Duración estimada</label>
+          <select class="f-input" id="cDuration" onchange="updateSum()"><option value="Menos de 30 min">Menos de 30 min</option><option value="30-60 min" selected>30 a 60 min</option><option value="Más de 1 hora">Más de 1 hora</option><option value="Indefinida">Indefinida</option></select>
+        </div>
+        <div class="f-group"><label class="f-label">Nivel de urgencia</label>
+          <div class="urgency-row">
+            <input type="radio" class="urg-opt" name="urg" id="u1" value="Normal" checked onchange="updateSum()"><label class="urg-label" for="u1">Normal</label>
+            <input type="radio" class="urg-opt" name="urg" id="u2" value="Prioritario" onchange="updateSum()"><label class="urg-label" for="u2">Prioritario</label>
+            <input type="radio" class="urg-opt" name="urg" id="u3" value="🚨 Emergencia" onchange="updateSum()"><label class="urg-label" for="u3">🚨 Emergencia</label>
+          </div>
+        </div>
+        <div class="f-group"><label class="f-label">Detalles o amenazas conocidas</label><textarea class="f-input" id="cDetails" placeholder="Cuéntanos todo lo que necesitemos saber..."></textarea></div>
+      </div>
+      <div>
+        <div class="summary-card">
+          <div class="summary-title">RESUMEN</div>
+          <div class="summary-line"><span class="sum-label">Servicio</span><span class="sum-val gold" id="sSum-svc">Sin seleccionar</span></div>
+          <div class="summary-line"><span class="sum-label">Cliente</span><span class="sum-val" id="sSum-client">—</span></div>
+          <div class="summary-line"><span class="sum-label">Agentes</span><span class="sum-val" id="sSum-agents">2 agentes</span></div>
+          <div class="summary-line"><span class="sum-label">Zona</span><span class="sum-val" id="sSum-loc">—</span></div>
+          <div class="summary-line"><span class="sum-label">Duración</span><span class="sum-val" id="sSum-dur">30 a 60 min</span></div>
+          <div class="summary-line"><span class="sum-label">Urgencia</span><span class="sum-val" id="sSum-urg">Normal</span></div>
+          <div style="border-top:1px solid var(--border);margin:.85rem 0"></div>
+          <div class="guarantee">✅ Respuesta garantizada en menos de 2 horas. Emergencias: menos de 20 min.</div>
+          <button class="btn-primary" style="width:100%;margin-top:.5rem" onclick="submitOrder()">Confirmar solicitud →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="client-success" id="clientSuccess">
+    <div class="client-success-icon">🛡️</div>
+    <div class="client-success-title">SOLICITUD CONFIRMADA</div>
+    <div class="client-success-code" id="orderCode">REF: DELTA-0001</div>
+    <p class="client-success-sub">Tu solicitud ha sido registrada. Un mando te contactará por Discord para confirmar la asignación del equipo.</p>
+    <button class="btn-primary" onclick="goTo('inicio')">← Volver al inicio</button>
+  </div>
+</div>
+
+<!-- MODAL FICHA -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal">
+    <div class="modal-title">FICHA DE AGENTE</div>
+    <div class="modal-field"><span class="modal-lbl">Usuario Roblox</span><div class="modal-val" id="m-user"></div></div>
+    <div class="modal-field"><span class="modal-lbl">Rango</span><div class="modal-val" id="m-rank"></div></div>
+    <div class="modal-field"><span class="modal-lbl">Estado</span><div class="modal-val" id="m-status"></div></div>
+    <div class="modal-field"><span class="modal-lbl">Fecha de ingreso</span><div class="modal-val" id="m-date"></div></div>
+    <div class="modal-field"><span class="modal-lbl">Misiones completadas</span><div class="modal-val" id="m-missions"></div></div>
+    <div class="modal-field"><span class="modal-lbl">Notas del mando</span><div class="modal-val" id="m-notes"></div></div>
+    <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('open')">Cerrar</button>
+  </div>
+</div>
+
+<script>
+// ===== NAVIGATION =====
+function goTo(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  const nl = document.getElementById('nl-' + page);
+  if (nl) nl.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function toggleMenu() {
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+
+// ===== FORMULARIO INGRESO =====
+function updateProgress() {
+  let answered = 0;
+  for (let i = 1; i <= 25; i++) {
+    const els = document.querySelectorAll(`#ingForm [name="q${i}"]`);
+    let filled = false;
+    els.forEach(el => {
+      if (el.type === 'radio' && el.checked) filled = true;
+      else if (el.type !== 'radio' && el.value.trim() !== '') filled = true;
+    });
+    if (filled) answered++;
+  }
+  const pct = Math.round((answered / 25) * 100);
+  document.getElementById('pFill').style.width = pct + '%';
+  document.getElementById('pLbl').textContent = `${answered} / 25 respondidas`;
+}
+document.querySelectorAll('#ingForm .f-input, #ingForm .radio-opt').forEach(el => {
+  el.addEventListener('change', updateProgress);
+  el.addEventListener('input', updateProgress);
+});
+async function submitIngreso(e) {
+  e.preventDefault();
+  const form = document.getElementById('ingForm');
+  const btn = form.querySelector('button[type="submit"]');
+  btn.textContent = 'Enviando...';
+  btn.disabled = true;
+
+  // Recoger todas las respuestas
+  const data = new FormData(form);
+  const preguntas = [
+    '01 · Usuario de Roblox','02 · Edad','03 · País / Zona horaria',
+    '04 · Horas semanales','05 · Discord activo',
+    '06 · Tiempo en EV','07 · Nivel en el juego','08 · Grupos anteriores',
+    '09 · Sanciones / bans','10 · Conoce el mapa',
+    '11 · Exp. roleplay seguridad','12 · Perímetro de seguridad',
+    '13 · Cliente atacado de improviso','14 · Sospechoso cerca del cliente',
+    '15 · Trabajo en equipo',
+    '16 · Cliente en zona peligrosa','17 · Compañero incumple protocolo',
+    '18 · Cliente pide algo contra reglas','19 · Orden con la que no está de acuerdo',
+    '20 · Pérdida de comunicación',
+    '21 · Por qué Delta Seguridad','22 · Qué te diferencia',
+    '23 · Acepta periodo de Cadete','24 · Acepta reglamento','25 · Info adicional'
+  ];
+
+  let campos = '';
+  let fieldsObj = {};
+  for (let i = 1; i <= 25; i++) {
+    const val = data.get('q'+i) || '—';
+    campos += `**${preguntas[i-1]}**\n${val}\n\n`;
+    fieldsObj['q'+i] = val;
+  }
+
+  const ref = 'ING-' + Date.now().toString().slice(-6);
+
+  // 1. Enviar a Discord webhook
+  try {
+    await fetch('https://discord.com/api/webhooks/1489203838429954108/UWcK8rRz412B72gZpA6UZ0hJ7n284WKKKrvTiW5eMhAjiXLkKDFx-wLrmwEwQ6PbDxe3', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        username: 'Delta Seguridad — Solicitudes',
+        avatar_url: 'https://i.imgur.com/4M34hi2.png',
+        embeds: [{
+          title: '🛡️ Nueva solicitud de ingreso',
+          color: 0xC9A84C,
+          description: `**Referencia:** \`${ref}\`\n\n${campos}`,
+          footer: { text: 'Delta Seguridad · Emergency Valladolid' },
+          timestamp: new Date().toISOString()
+        }]
+      })
+    });
+  } catch(err) { console.warn('Discord webhook error:', err); }
+
+  // 2. Enviar a email via Formspree
+  try {
+    await fetch('https://formspree.io/f/mlgowgkj', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+      body: JSON.stringify({
+        _subject: `[Delta Seguridad] Nueva solicitud de ingreso — ${fieldsObj.q1} (${ref})`,
+        referencia: ref,
+        ...fieldsObj
+      })
+    });
+  } catch(err) { console.warn('Formspree error:', err); }
+
+  form.style.display = 'none';
+  document.getElementById('ingSuccess').style.display = 'block';
+  document.getElementById('ingSuccess').querySelector('.client-success-code, .success-title') ;
+  // Mostrar ref en pantalla de éxito
+  const refEl = document.createElement('div');
+  refEl.style.cssText = "font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--gold);letter-spacing:.15em;margin-bottom:1rem";
+  refEl.textContent = 'REF: ' + ref;
+  document.getElementById('ingSuccess').insertBefore(refEl, document.getElementById('ingSuccess').querySelector('p'));
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// ===== PANEL AGENTES =====
+let agents = [
+  {id:1,user:'DirectorEV',rank:'Director General',status:'activo',date:'01/01/2025',missions:0,notes:'Fundador de Delta Seguridad.'},
+  {id:2,user:'SubDirAlpha',rank:'Subdirector',status:'activo',date:'05/01/2025',missions:12,notes:'Mano derecha. Gestiona RRHH.'},
+  {id:3,user:'OpsCommand',rank:'Jefe de Ops',status:'activo',date:'10/01/2025',missions:28,notes:'Excelente coordinación en campo.'},
+  {id:4,user:'AgenteSeniorX',rank:'Agente Senior',status:'activo',date:'15/01/2025',missions:45,notes:'Veterano. Entrena a cadetes.'},
+  {id:5,user:'AgenteUno',rank:'Agente',status:'activo',date:'20/01/2025',missions:17,notes:'Activo y comprometido.'},
+  {id:6,user:'zaro0663',rank:'Cadete',status:'cadete',date:'01/04/2025',missions:0,notes:'En periodo de formación. Buen criterio táctico.'},
+  {id:7,user:'AgenteBaja',rank:'Agente',status:'inactivo',date:'01/02/2025',missions:8,notes:'Sin actividad desde hace 2 semanas.'},
+];
+let missions = [];
+let nextId = 8, orderCount = 1, currentFilter = 'todos', selectedSvcName = '';
+
+const rankClass = {'Director General':'rank-director','Subdirector':'rank-subdirector','Jefe de Ops':'rank-jefe','Agente Senior':'rank-senior','Agente':'rank-agente','Cadete':'rank-cadete'};
+const avatarBg = {'Director General':'#2a200a','Subdirector':'#2a0a0a','Jefe de Ops':'#2a1a08','Agente Senior':'#0a1a2a','Agente':'#0a2a14','Cadete':'#1a0a2a'};
+const statusHtml = {activo:'<span class="status-dot s-active"></span>Activo',inactivo:'<span class="status-dot s-inactive"></span>Inactivo',cadete:'<span class="status-dot s-training"></span>Formación'};
+
+function renderAgents() {
+  const search = (document.getElementById('searchInp')||{value:''}).value.toLowerCase();
+  const filtered = agents.filter(a => {
+    const mf = currentFilter === 'todos' || a.status === currentFilter;
+    const ms = a.user.toLowerCase().includes(search) || a.rank.toLowerCase().includes(search);
+    return mf && ms;
+  });
+  document.getElementById('agentsBody').innerHTML = filtered.map(a => `
+    <tr>
+      <td><div class="agent-name-cell"><div class="agent-avatar" style="background:${avatarBg[a.rank]||'#111'};color:var(--gold)">${a.user.slice(0,2).toUpperCase()}</div><div><div>${a.user}</div><div class="agent-id">#${String(a.id).padStart(4,'0')}</div></div></div></td>
+      <td><span class="rank-badge ${rankClass[a.rank]||''}">${a.rank}</span></td>
+      <td>${statusHtml[a.status]||a.status}</td>
+      <td style="color:var(--muted);font-size:.8rem">${a.date}</td>
+      <td style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--gold)">${a.missions}</td>
+      <td><button class="action-btn" onclick="openModal(${a.id})">Ver ficha</button><button class="action-btn" style="color:#e74c3c" onclick="removeAgent(${a.id})">Eliminar</button></td>
+    </tr>`).join('');
+  document.getElementById('totalCount').textContent = agents.length;
+  document.getElementById('activeCount').textContent = agents.filter(a=>a.status==='activo').length;
+  document.getElementById('cadeteCount').textContent = agents.filter(a=>a.status==='cadete').length;
+  document.getElementById('inactiveCount').textContent = agents.filter(a=>a.status==='inactivo').length;
+}
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderAgents();
+}
+function filterAgents() { renderAgents(); }
+function openModal(id) {
+  const a = agents.find(x=>x.id===id); if (!a) return;
+  document.getElementById('m-user').textContent = a.user;
+  document.getElementById('m-rank').textContent = a.rank;
+  document.getElementById('m-status').textContent = {activo:'Activo ✅',inactivo:'Inactivo ❌',cadete:'En formación 🟡'}[a.status]||a.status;
+  document.getElementById('m-date').textContent = a.date;
+  document.getElementById('m-missions').textContent = a.missions;
+  document.getElementById('m-notes').textContent = a.notes||'—';
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function removeAgent(id) {
+  if (!confirm('¿Eliminar este agente del sistema?')) return;
+  agents = agents.filter(a=>a.id!==id);
+  renderAgents();
+}
+function addAgent() {
+  const user = document.getElementById('newUser').value.trim();
+  const rank = document.getElementById('newRank').value;
+  const status = document.getElementById('newStatus').value;
+  const notes = document.getElementById('newNotes').value.trim();
+  if (!user) { alert('Introduce el usuario de Roblox.'); return; }
+  const now = new Date();
+  const date = `${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')}/${now.getFullYear()}`;
+  agents.push({id:nextId++,user,rank,status,date,missions:0,notes:notes||'Sin notas.'});
+  document.getElementById('newUser').value='';
+  document.getElementById('newNotes').value='';
+  showPanel('agentes', document.getElementById('sb-agentes'));
+  renderAgents();
+  alert(`✅ Agente "${user}" añadido.`);
+}
+function showPanel(name, btn) {
+  document.querySelectorAll('.panel-page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('pp-'+name).classList.add('active');
+  document.querySelectorAll('.sidebar-item').forEach(b=>b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+function addMission() {
+  const name = document.getElementById('mName').value.trim();
+  const type = document.getElementById('mType').value;
+  const leader = document.getElementById('mLeader').value.trim();
+  const client = document.getElementById('mClient').value.trim();
+  if (!name||!leader) { alert('Completa nombre de misión y agente líder.'); return; }
+  missions.push({id:missions.length+1,name,type,leader,client,status:'activa'});
+  document.getElementById('mName').value='';
+  document.getElementById('mLeader').value='';
+  document.getElementById('mClient').value='';
+  renderMissions();
+}
+function renderMissions() {
+  const body = document.getElementById('missionsBody');
+  if (!missions.length) { body.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:2rem">No hay misiones registradas</td></tr>'; return; }
+  body.innerHTML = missions.map((m,i)=>`
+    <tr>
+      <td>${m.name}</td><td style="color:var(--muted);font-size:.82rem">${m.type}</td><td>${m.leader}</td>
+      <td style="color:var(--muted)">${m.client||'—'}</td>
+      <td><span style="font-family:'Barlow Condensed',sans-serif;font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border:1px solid;border-color:${m.status==='completada'?'#555':'#27ae60'};color:${m.status==='completada'?'var(--muted)':'#2ecc71'}">${m.status}</span></td>
+      <td>${m.status!=='completada'?`<button class="action-btn" style="color:#27ae60" onclick="completeMission(${i})">Completar</button>`:''}</td>
+    </tr>`).join('');
+}
+function completeMission(i) { missions[i].status='completada'; renderMissions(); }
+
+// ===== CLIENTES =====
+function selectSvc(el, name) {
+  document.querySelectorAll('.svc-pick').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedSvcName = name;
+  updateSum();
+}
+function updateSum() {
+  document.getElementById('sSum-svc').textContent = selectedSvcName||'Sin seleccionar';
+  document.getElementById('sSum-client').textContent = (document.getElementById('cUser').value.trim())||'—';
+  document.getElementById('sSum-agents').textContent = document.getElementById('cAgents').value;
+  document.getElementById('sSum-loc').textContent = (document.getElementById('cLocation').value.trim())||'—';
+  document.getElementById('sSum-dur').textContent = document.getElementById('cDuration').value;
+  const u = document.querySelector('input[name="urg"]:checked');
+  document.getElementById('sSum-urg').textContent = u?u.value:'Normal';
+}
+async function submitOrder() {
+  const user = document.getElementById('cUser').value.trim();
+  const discord = document.getElementById('cDiscord').value.trim();
+  const location = document.getElementById('cLocation').value.trim();
+  const agents = document.getElementById('cAgents').value;
+  const duration = document.getElementById('cDuration').value;
+  const details = document.getElementById('cDetails').value.trim();
+  const urg = (document.querySelector('input[name="urg"]:checked')||{value:'Normal'}).value;
+  if (!selectedSvcName) { alert('Selecciona un servicio primero.'); return; }
+  if (!user) { alert('Introduce tu usuario de Roblox.'); return; }
+  if (!discord) { alert('Introduce tu usuario de Discord.'); return; }
+  const btn = document.querySelector('#clientMain .btn-primary');
+  if (btn) { btn.textContent = 'Enviando...'; btn.disabled = true; }
+  const ref = 'DELTA-' + String(orderCount++).padStart(4,'0');
+  try {
+    await fetch('https://discord.com/api/webhooks/1489203838429954108/UWcK8rRz412B72gZpA6UZ0hJ7n284WKKKrvTiW5eMhAjiXLkKDFx-wLrmwEwQ6PbDxe3', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        username: 'Delta Seguridad — Clientes',
+        embeds: [{
+          title: '💼 Nueva solicitud de servicio',
+          color: 0xC9A84C,
+          fields: [
+            {name: '🎮 Usuario Roblox', value: user, inline: true},
+            {name: '💬 Discord', value: discord, inline: true},
+            {name: '🛡️ Servicio', value: selectedSvcName, inline: true},
+            {name: '👥 Agentes solicitados', value: agents, inline: true},
+            {name: '📍 Zona', value: location||'No indicada', inline: true},
+            {name: '⏱️ Duración', value: duration, inline: true},
+            {name: '🚨 Urgencia', value: urg, inline: true},
+            {name: '📋 Detalles', value: details||'Sin detalles adicionales', inline: false},
+          ],
+          footer: {text: 'Ref: '+ref+' · Delta Seguridad'},
+          timestamp: new Date().toISOString()
+        }]
+      })
+    });
+  } catch(err) { console.warn('Discord error:', err); }
+  try {
+    await fetch('https://formspree.io/f/mlgowgkj', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+      body: JSON.stringify({
+        _subject: '[Delta Seguridad] Solicitud servicio — '+user+' · '+selectedSvcName+' ('+ref+')',
+        referencia: ref, usuario_roblox: user, discord: discord,
+        servicio: selectedSvcName, agentes: agents, zona: location||'No indicada',
+        duracion: duration, urgencia: urg, detalles: details||'Sin detalles'
+      })
+    });
+  } catch(err) { console.warn('Formspree error:', err); }
+  document.getElementById('orderCode').textContent = 'REF: ' + ref;
+  document.getElementById('clientMain').style.display = 'none';
+  document.getElementById('clientSuccess').style.display = 'block';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ===== INIT =====
+renderAgents();
+renderMissions();
+</script>
+</body>
+</html>
